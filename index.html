@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vaporwave Song Catalog</title>
+</head>
+<body>
+  <h2>Vaporwave Song Catalog</h2>
+  <input type="text" id="songTitle" placeholder="Enter song title">
+  <button onclick="addSong()">Add Song</button>
+  <button onclick="getSongs()">Show All Songs</button>
+
+  <div id="songList"></div>
+
+  <script>
+    function addSong() {
+      const title = document.getElementById('songTitle').value;
+      fetch('http://localhost:3001/add-song', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    }
+
+    function getSongs() {
+      fetch('http://localhost:3001/songs')
+        .then(response => response.json())
+        .then(data => {
+          const songList = document.getElementById('songList');
+          songList.innerHTML = data.songs.map(song => `<p>${song.title}</p>`).join('');
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+  </script>
+</body>
+</html>
